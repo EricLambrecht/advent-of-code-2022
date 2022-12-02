@@ -5,5 +5,6 @@ export const run = async () => {
     const __dirname = getDirnameFromImportMetaUrl(import.meta.url);
     console.log('loading', __dirname + '/input.txt');
     const input = await fs.readFile(__dirname + '/input.txt', { encoding: 'utf8' })
-    console.log(input);
+    const caloriesPerElf = input.split('\n\n').map(i => i.split('\n'));
+    console.log(caloriesPerElf);
 }
