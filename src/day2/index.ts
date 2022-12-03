@@ -74,7 +74,7 @@ export class Solution extends SolutionBase {
       const outcome =
         rulesOfRockPaperScissors[expectedResponseShape][step.oppponentMove]
       const outcomeScore = scoresByOutcome[outcome]
-      const shapeScore = scoresByShape[step.response]
+      const shapeScore = scoresByShape[expectedResponseShape]
       return currentScore + outcomeScore + shapeScore
     }, 0)
 
