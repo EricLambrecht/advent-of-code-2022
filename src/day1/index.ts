@@ -28,9 +28,9 @@ export class Solution extends SolutionBase {
 
     const topElf = elves[0]
     console.log(
-      `1. The elf with the most calories is ${topElf.name} carrying this much calories:`
+      `1. The elf with the most calories is ${topElf.name} carrying this much calories:`,
+      topElf.caloriesTotal
     )
-    console.log(topElf.caloriesTotal)
 
     const topThree = elves.slice(0, 3)
     const totalCaloriesTopThree = topThree.reduce(
@@ -38,7 +38,9 @@ export class Solution extends SolutionBase {
       0
     )
 
-    console.log("2. The top three elves carry this much calories in total:")
-    console.log(totalCaloriesTopThree)
+    console.log(
+      "2. The top three elves carry this much calories in total:",
+      totalCaloriesTopThree
+    )
   }
 }

@@ -41,9 +41,9 @@ export class Solution extends SolutionBase {
       }
     })
 
-    const commonItems = rucksacks.map((r) => {
-      return r.firstCompartment.find((item) => r.lastCompartment.includes(item))
-    })
+    const commonItems = rucksacks.map((r) =>
+      r.firstCompartment.find((item) => r.lastCompartment.includes(item))
+    )
 
     const result = commonItems?.reduce(
       (sum, item) => (item ? sum + this.priorityList[item] : sum),
@@ -59,11 +59,11 @@ export class Solution extends SolutionBase {
       g.split("\n").map((str) => str.split(""))
     )
 
-    const commonItems = groupsOfThree?.map((group) => {
-      return group[0].find(
+    const commonItems = groupsOfThree?.map((group) =>
+      group[0].find(
         (item) => group[1].includes(item) && group[2].includes(item)
       )
-    })
+    )
 
     const result = commonItems?.reduce(
       (sum, item) => (item ? sum + this.priorityList[item] : sum),
