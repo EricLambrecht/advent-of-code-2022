@@ -42,16 +42,15 @@ export class Solution extends SolutionBase {
     })
 
     const commonItems = rucksacks.map((r) => {
-      const commonItem = r.firstCompartment.find((item) =>
-        r.lastCompartment.includes(item)
-      )
-      return commonItem || ""
+      return r.firstCompartment.find((item) => r.lastCompartment.includes(item))
     })
 
-    console.log("Part 1: The cumulated common item priorities are:")
-    console.log(
-      commonItems.reduce((sum, item) => sum + this.priorityList[item], 0)
+    const result = commonItems?.reduce(
+      (sum, item) => (item ? sum + this.priorityList[item] : sum),
+      0
     )
+
+    console.log("Part 1: The cumulated common item priorities are:", result)
   }
 
   partTwo(input: string) {
@@ -60,18 +59,20 @@ export class Solution extends SolutionBase {
       g.split("\n").map((str) => str.split(""))
     )
 
-    const commonItems = groupsOfThree?.map((g) => {
-      const commonItem = g[0].find(
-        (item) => g[1].includes(item) && g[2].includes(item)
+    const commonItems = groupsOfThree?.map((group) => {
+      return group[0].find(
+        (item) => group[1].includes(item) && group[2].includes(item)
       )
-      return commonItem || "?"
     })
 
-    console.log(
-      "Part 2 (groups of three): The cumulated common item priorities are:"
+    const result = commonItems?.reduce(
+      (sum, item) => (item ? sum + this.priorityList[item] : sum),
+      0
     )
+
     console.log(
-      commonItems?.reduce((sum, item) => sum + this.priorityList[item], 0)
+      "Part 2 (groups of three): The cumulated common item priorities are:",
+      result
     )
   }
 }
