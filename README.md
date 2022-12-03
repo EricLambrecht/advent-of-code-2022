@@ -1,5 +1,7 @@
 # Advent of Code 2022
 
+https://adventofcode.com/2022/
+
 Programming language used: **Typescript**
 
 ## Running the scripts
