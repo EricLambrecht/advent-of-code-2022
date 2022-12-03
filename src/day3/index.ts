@@ -8,24 +8,19 @@ export class Solution extends SolutionBase {
     this.priorityList = this.generatePriorityList()
   }
 
-  generateBigLetterAlphabet() {
-    return Array.from(Array(26)).map((e, i) => String.fromCharCode(i + 65))
-  }
-
-  generateSmallLetterAlphabet() {
-    return this.generateBigLetterAlphabet().map((letter) =>
-      letter.toLowerCase()
-    )
-  }
-
   generatePriorityList() {
     const priorityList: Record<string, number> = {}
-    this.generateSmallLetterAlphabet().forEach((letter, i) => {
+    const bigLetterAlphabet = Array.from(Array(26)).map((e, i) =>
+      String.fromCharCode(i + 65)
+    )
+    const smallLetterAlphabet = bigLetterAlphabet.map((letter) =>
+      letter.toLowerCase()
+    )
+
+    ;[...smallLetterAlphabet, ...bigLetterAlphabet].forEach((letter, i) => {
       priorityList[letter] = i + 1
     })
-    this.generateBigLetterAlphabet().forEach((letter, i) => {
-      priorityList[letter] = i + 27
-    })
+
     return priorityList
   }
 
