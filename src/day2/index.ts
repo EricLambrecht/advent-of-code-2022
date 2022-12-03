@@ -22,7 +22,7 @@ enum Outcome {
   Loss = "loss",
 }
 
-const rulesOfRockPaperScissors: Rules = {
+const matchScenarios: Rules = {
   X: { A: Outcome.Draw, B: Outcome.Loss, C: Outcome.Win },
   Y: { A: Outcome.Win, B: Outcome.Draw, C: Outcome.Loss },
   Z: { A: Outcome.Loss, B: Outcome.Win, C: Outcome.Draw },
@@ -47,6 +47,12 @@ const scoresByShape = {
 }
 
 export class Solution extends SolutionBase {
+  calculateScore(outcome: Outcome, shapeUsed: ResponseShape) {
+    const outcomeScore = scoresByOutcome[outcome]
+    const shapeScore = scoresByShape[shapeUsed]
+    return outcomeScore + shapeScore
+  }
+
   async solve() {
     const input = await this.readInput()
     const lines = input.trim().split("\n")
@@ -56,29 +62,22 @@ export class Solution extends SolutionBase {
     }))
 
     const totalScore = strategyGuide.reduce((currentScore, step) => {
-      const outcome =
-        rulesOfRockPaperScissors[step.response as ResponseShape][
-          step.oppponentMove
-        ]
-      const outcomeScore = scoresByOutcome[outcome]
-      const shapeScore = scoresByShape[step.response]
-      return currentScore + outcomeScore + shapeScore
+      const outcome = matchScenarios[step.response][step.oppponentMove]
+      return currentScore + this.calculateScore(outcome, step.response)
     }, 0)
 
-    console.log("Part 1. Score according to strategy guide:")
-    console.log(totalScore)
+    console.log("Part 1. Score according to strategy guide:", totalScore)
 
     const totalScorePart2 = strategyGuide.reduce((currentScore, step) => {
       const expectedResponseShape =
         realStrategyGuide[step.oppponentMove][step.response]
-      const outcome =
-        rulesOfRockPaperScissors[expectedResponseShape][step.oppponentMove]
-      const outcomeScore = scoresByOutcome[outcome]
-      const shapeScore = scoresByShape[expectedResponseShape]
-      return currentScore + outcomeScore + shapeScore
+      const outcome = matchScenarios[expectedResponseShape][step.oppponentMove]
+      return currentScore + this.calculateScore(outcome, expectedResponseShape)
     }, 0)
 
-    console.log("Part 2. Score according to the real™ strategy guide:")
-    console.log(totalScorePart2)
+    console.log(
+      "Part 2. Score according to the real™ strategy guide:",
+      totalScorePart2
+    )
   }
 }
