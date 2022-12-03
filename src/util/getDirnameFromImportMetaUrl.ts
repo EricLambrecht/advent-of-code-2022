@@ -1,7 +1,7 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 export const getDirnameFromImportMetaUrl = (importMetaUrl: string) => {
-    const __filename = fileURLToPath(importMetaUrl);
-    return path.dirname(__filename);
-}
+  const __filename = fileURLToPath(importMetaUrl);
+  return path.dirname(__filename);
+};
