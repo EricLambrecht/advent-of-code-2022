@@ -31,8 +31,8 @@ export class Solution extends SolutionBase {
 
   async solve() {
     const input = await this.readInput()
-    this.partOne(input);
-    this.partTwo(input);
+    this.partOne(input)
+    this.partTwo(input)
   }
 
   partOne(input: string) {
@@ -61,16 +61,20 @@ export class Solution extends SolutionBase {
 
   partTwo(input: string) {
     const groupsOfThreeRaw = input.trim().match(/\w+\n\w+\n\w+/gm)
-    const groupsOfThree = groupsOfThreeRaw?.map(g => g.split('\n').map(str => str.split('')))
+    const groupsOfThree = groupsOfThreeRaw?.map((g) =>
+      g.split("\n").map((str) => str.split(""))
+    )
 
     const commonItems = groupsOfThree?.map((g) => {
-      const commonItem = g[0].find((item) =>
-        g[1].includes(item) && g[2].includes(item)
+      const commonItem = g[0].find(
+        (item) => g[1].includes(item) && g[2].includes(item)
       )
       return commonItem || "?"
     })
 
-    console.log("Part 2 (groups of three): The cumulated common item priorities are:")
+    console.log(
+      "Part 2 (groups of three): The cumulated common item priorities are:"
+    )
     console.log(
       commonItems?.reduce((sum, item) => sum + this.priorityList[item], 0)
     )
