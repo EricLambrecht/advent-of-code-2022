@@ -1,10 +1,10 @@
-import fs from "fs/promises";
+import fs from "fs/promises"
 
 export class SolutionBase {
-  public solutionDirectory: string;
+  public solutionDirectory: string
 
   constructor(directory: string) {
-    this.solutionDirectory = directory;
+    this.solutionDirectory = directory
   }
 
   readInput(fileName = "input.txt") {
@@ -14,6 +14,6 @@ export class SolutionBase {
   }
 
   async solve() {
-    console.warn('Implement solve() to see your output!')
+    console.warn("Implement solve() to see your output!")
   }
 }
