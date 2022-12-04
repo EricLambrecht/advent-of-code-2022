@@ -1,11 +1,15 @@
 import { SolutionBase } from "../util/SolutionBase.js"
 
+const PAIR_BOUNDARIES_REGEX = /(\d+)-(\d+),(\d+)-(\d+)/
+
 export class Solution extends SolutionBase {
   async solve() {
     const pairsRaw = await this.readInputLines()
     const obsoletePairs = pairsRaw.filter((pair) => {
-      const matches = pair.match(/(\d+)-(\d+),(\d+)-(\d+)/)! // we can be sure that there are matches since we know the input
+      // We can be sure that there are matches since we know the input, hence the "!"
+      const matches = pair.match(PAIR_BOUNDARIES_REGEX)!
       const [, aMin, aMax, bMin, bMax] = matches
+
       // The two-bitwise-operator (~~) converts the string to an integer
       return (
         (~~aMin >= ~~bMin && ~~aMax <= ~~bMax) ||
@@ -15,7 +19,7 @@ export class Solution extends SolutionBase {
     console.log("Part 1 – obsolete pairs:", obsoletePairs.length)
 
     const overlappingPairs = pairsRaw.filter((pair) => {
-      const matches = pair.match(/(\d+)-(\d+),(\d+)-(\d+)/)! // we can be sure that there are matches since we know the input
+      const matches = pair.match(PAIR_BOUNDARIES_REGEX)!
       const [, aMin, aMax, bMin, bMax] = matches
       return !(~~aMax < ~~bMin || ~~aMin > ~~bMax)
     })
