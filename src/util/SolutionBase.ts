@@ -7,10 +7,15 @@ export class SolutionBase {
     this.solutionDirectory = directory
   }
 
-  readInput(fileName = "input.txt") {
+  async readInput(fileName = "input.txt") {
     return fs.readFile(this.solutionDirectory + "/" + fileName, {
       encoding: "utf8",
     })
+  }
+
+  async readInputLines(fileName = "input.txt") {
+    const input = await this.readInput()
+    return input.trim().split("\n")
   }
 
   async solve() {
