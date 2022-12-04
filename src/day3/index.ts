@@ -10,17 +10,11 @@ export class Solution extends SolutionBase {
 
   generatePriorityList() {
     const priorityList: Record<string, number> = {}
-    const bigLetterAlphabet = Array.from(Array(26)).map((e, i) =>
-      String.fromCharCode(i + 65)
-    )
-    const smallLetterAlphabet = bigLetterAlphabet.map((letter) =>
-      letter.toLowerCase()
-    )
 
-    ;[...smallLetterAlphabet, ...bigLetterAlphabet].forEach((letter, i) => {
-      priorityList[letter] = i + 1
-    })
-
+    /* At first, I generated the alphabet manually using String.fromCharCode(),
+       but then I realized that hard-coding it is more readable and concise. */
+    const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    Array.from(alphabet).forEach((letter, i) => (priorityList[letter] = i + 1))
     return priorityList
   }
 
