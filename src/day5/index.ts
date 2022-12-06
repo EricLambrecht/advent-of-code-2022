@@ -11,6 +11,11 @@ interface Instruction {
 
 export class Solution extends SolutionBase {
   async solve() {
+    await this.part1()
+    await this.part2()
+  }
+
+  async getStacksAndInstructions(): Promise<[Stacks, Instruction[]]> {
     const input = await this.readInput()
     const [stacksString, instructionsString] = input.split("\n\n")
 
@@ -48,7 +53,19 @@ export class Solution extends SolutionBase {
         return { amount: Number.parseInt(amount), from, to }
       })
 
-    // Perform instructions
+    return [stacks, instructions]
+  }
+
+  printSolutionKey(stacks: Stacks) {
+    let solutionKey = ""
+    for (let [, stack] of Object.entries(stacks)) {
+      solutionKey += stack[stack.length - 1]
+    }
+    console.log(solutionKey)
+  }
+
+  async part1() {
+    const [stacks, instructions] = await this.getStacksAndInstructions();
     for (let instruction of instructions) {
       const { amount, from, to } = instruction
       for (let i = 0; i < amount; i++) {
@@ -57,11 +74,19 @@ export class Solution extends SolutionBase {
         )
       }
     }
+    this.printSolutionKey(stacks)
+  }
 
-    let part1Solution = ""
-    for (let [,stack] of Object.entries(stacks)) {
-      part1Solution += stack[stack.length - 1]
+  async part2() {
+    const [stacks, instructions] = await this.getStacksAndInstructions();
+    for (let instruction of instructions) {
+      const { amount, from, to } = instruction
+      const tempStack: Stack = []
+      for (let i = 0; i < amount; i++) {
+        tempStack.push(stacks[`stack${from}`].pop() || "Erroneous Crate")
+      }
+      stacks[`stack${to}`].push(...tempStack.reverse())
     }
-    console.log(part1Solution)
+    this.printSolutionKey(stacks)
   }
 }
