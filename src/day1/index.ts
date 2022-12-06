@@ -1,46 +1,29 @@
 import { SolutionBase } from "../util/SolutionBase.js"
 
-interface Elf {
-  name: string
-  calories: number[]
-  caloriesTotal: number
-}
-
 export class Solution extends SolutionBase {
+  /*
+   * I revisited this on day 6 to remove unnecessary stuff that was not used,
+   * like "elf names" and collecting data that was not even printed. :D
+   *
+   * Back at Day 1 I wasn't sure how this challenge works, and now I think
+   * this fluff distracts from actual the solution logic (which I didn't touch).
+   */
   async solve() {
     const input = await this.readInput()
 
-    const elves = input
+    const calorieHighscores = input
       .split("\n\n")
       .map((rawCalories, i) => {
         const calories = rawCalories.split("\n").map((c) => Number.parseInt(c))
-        const caloriesTotal = calories.reduce(
-          (sum, calories) => sum + calories,
-          0
-        )
-        return {
-          name: `${i + 1}. Elf`,
-          caloriesTotal,
-          calories,
-        } as Elf
+        return calories.reduce((sum, calories) => sum + calories, 0)
       })
-      .sort((a, b) => b.caloriesTotal - a.caloriesTotal)
+      .sort((a, b) => b - a)
 
-    const topElf = elves[0]
-    console.log(
-      `1. The elf with the most calories is ${topElf.name} carrying this much calories:`,
-      topElf.caloriesTotal
-    )
+    const topScore = calorieHighscores[0]
+    this.outputPart1(topScore)
 
-    const topThree = elves.slice(0, 3)
-    const totalCaloriesTopThree = topThree.reduce(
-      (sum, elf) => sum + elf.caloriesTotal,
-      0
-    )
-
-    console.log(
-      "2. The top three elves carry this much calories in total:",
-      totalCaloriesTopThree
-    )
+    const topThree = calorieHighscores.slice(0, 3)
+    const topThreeScore = topThree.reduce((sum, calories) => sum + calories, 0)
+    this.outputPart2(topThreeScore)
   }
 }
