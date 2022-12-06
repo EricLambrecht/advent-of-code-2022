@@ -26,16 +26,18 @@ export class Solution extends SolutionBase {
   }
 
   async executeInstructions(moveInBulk: boolean): Promise<Stacks> {
-    const [stacks, instructions] = await this.getParsedInput();
+    const [stacks, instructions] = await this.getParsedInput()
     for (let instruction of instructions) {
       const { amount, from, to } = instruction
       const tempStack: Stack = []
       for (let i = 0; i < amount; i++) {
         tempStack.push(stacks[`stack${from}`].pop() || "Erroneous Crate")
       }
-      stacks[`stack${to}`].push(...(moveInBulk ? tempStack.reverse() : tempStack))
+      stacks[`stack${to}`].push(
+        ...(moveInBulk ? tempStack.reverse() : tempStack)
+      )
     }
-    return stacks;
+    return stacks
   }
 
   printSolutionKey(stacks: Stacks) {
@@ -50,14 +52,16 @@ export class Solution extends SolutionBase {
     const input = await this.readInput()
     const [stacksString, instructionsString] = input.split("\n\n")
 
-    // Parse stacks into array
+    // The last number in the string is the max amount
     const [stackAmount] = stacksString.match(/\d+\s*$/gm)!
+
+    // The base for the stacks will be the lines, except the last one, which is purely labels
     const stacksStringArray = stacksString.split("\n").slice(0, -1)
 
     const stacks: Stacks = {}
     for (let n = 1; n <= ~~stackAmount; n++) {
       const stackName = `stack${n}`
-      const cratePosition = 1 + 4 * (n - 1)
+      const cratePosition = 1 + 4 * (n - 1) // crate content is separated by 4 chars (w/ offset 1)
       stacksStringArray
         .slice()
         .reverse()
