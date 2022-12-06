@@ -16,17 +16,18 @@ export class Solution extends SolutionBase {
   }
 
   async part1() {
-    const stacks = await this.executeInstructions(false)
+    const stacks = await this.executeInstructionsFromInput(false)
     this.printSolutionKey(stacks)
   }
 
   async part2() {
-    const stacks = await this.executeInstructions(true)
+    const stacks = await this.executeInstructionsFromInput(true)
     this.printSolutionKey(stacks)
   }
 
-  async executeInstructions(moveInBulk: boolean): Promise<Stacks> {
+  async executeInstructionsFromInput(moveInBulk: boolean): Promise<Stacks> {
     const [stacks, instructions] = await this.getParsedInput()
+
     for (let instruction of instructions) {
       const { amount, from, to } = instruction
       const tempStack: Stack = []
@@ -37,6 +38,7 @@ export class Solution extends SolutionBase {
         ...(moveInBulk ? tempStack.reverse() : tempStack)
       )
     }
+
     return stacks
   }
 
@@ -55,7 +57,7 @@ export class Solution extends SolutionBase {
     // The last number in the string is the max amount
     const [stackAmount] = stacksString.match(/\d+\s*$/gm)!
 
-    // The base for the stacks will be the lines, except the last one, which is purely labels
+    // The base for the stacks will be the lines – except the last one, which is purely labels
     const stacksStringArray = stacksString.split("\n").slice(0, -1)
 
     const stacks: Stacks = {}
