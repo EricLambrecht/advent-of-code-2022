@@ -5,25 +5,24 @@ export class Solution extends SolutionBase {
     const input = await this.readInput()
 
     const startOfPacketMarker = this.detectStartMarker(input, 4)
-    console.log("Start-of-packet-marker occurs after", startOfPacketMarker)
-
     const startOfMessageMarker = this.detectStartMarker(input, 14)
-    console.log("Start-of-message-marker occurs after", startOfMessageMarker)
+
+    console.table({ startOfPacketMarker, startOfMessageMarker })
   }
 
   detectStartMarker(input: string, markerLength: number) {
     const startIndex = markerLength - 1
     for (let i = startIndex; i < input.length; i++) {
       const sequence = input.substring(i - startIndex, i + 1)
-      let canBeStartOfPacketMarker = true
+
+      let isStartMarker = true
       for (let char of sequence) {
-        const charIsDoubled = new RegExp(`${char}{1}.*${char}{1}`).test(
-          sequence
-        )
-        canBeStartOfPacketMarker = !charIsDoubled
-        if (!canBeStartOfPacketMarker) break
+        const charIsDoubled = RegExp(`${char}{1}.*${char}{1}`).test(sequence)
+        isStartMarker = !charIsDoubled
+        if (!isStartMarker) break
       }
-      if (canBeStartOfPacketMarker) {
+
+      if (isStartMarker) {
         return i + 1
       }
     }
