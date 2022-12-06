@@ -17,8 +17,8 @@ export class Solution extends SolutionBase {
 
       let isStartMarker = true
       for (let char of sequence) {
-        const charIsDoubled = RegExp(`${char}{1}.*${char}{1}`).test(sequence)
-        isStartMarker = !charIsDoubled
+        const charIsDuplicate = RegExp(`${char}{1}.*${char}{1}`).test(sequence)
+        isStartMarker = !charIsDuplicate
         if (!isStartMarker) break
       }
 
