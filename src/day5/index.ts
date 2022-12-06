@@ -15,7 +15,38 @@ export class Solution extends SolutionBase {
     await this.part2()
   }
 
-  async getStacksAndInstructions(): Promise<[Stacks, Instruction[]]> {
+  async part1() {
+    const stacks = await this.executeInstructions(false)
+    this.printSolutionKey(stacks)
+  }
+
+  async part2() {
+    const stacks = await this.executeInstructions(true)
+    this.printSolutionKey(stacks)
+  }
+
+  async executeInstructions(moveInBulk: boolean): Promise<Stacks> {
+    const [stacks, instructions] = await this.getParsedInput();
+    for (let instruction of instructions) {
+      const { amount, from, to } = instruction
+      const tempStack: Stack = []
+      for (let i = 0; i < amount; i++) {
+        tempStack.push(stacks[`stack${from}`].pop() || "Erroneous Crate")
+      }
+      stacks[`stack${to}`].push(...(moveInBulk ? tempStack.reverse() : tempStack))
+    }
+    return stacks;
+  }
+
+  printSolutionKey(stacks: Stacks) {
+    let solutionKey = ""
+    for (let stack of Object.values(stacks)) {
+      solutionKey += stack[stack.length - 1]
+    }
+    console.log(solutionKey)
+  }
+
+  async getParsedInput(): Promise<[Stacks, Instruction[]]> {
     const input = await this.readInput()
     const [stacksString, instructionsString] = input.split("\n\n")
 
@@ -54,39 +85,5 @@ export class Solution extends SolutionBase {
       })
 
     return [stacks, instructions]
-  }
-
-  printSolutionKey(stacks: Stacks) {
-    let solutionKey = ""
-    for (let [, stack] of Object.entries(stacks)) {
-      solutionKey += stack[stack.length - 1]
-    }
-    console.log(solutionKey)
-  }
-
-  async part1() {
-    const [stacks, instructions] = await this.getStacksAndInstructions();
-    for (let instruction of instructions) {
-      const { amount, from, to } = instruction
-      for (let i = 0; i < amount; i++) {
-        stacks[`stack${to}`].push(
-          stacks[`stack${from}`].pop() || "Erroneous Crate"
-        )
-      }
-    }
-    this.printSolutionKey(stacks)
-  }
-
-  async part2() {
-    const [stacks, instructions] = await this.getStacksAndInstructions();
-    for (let instruction of instructions) {
-      const { amount, from, to } = instruction
-      const tempStack: Stack = []
-      for (let i = 0; i < amount; i++) {
-        tempStack.push(stacks[`stack${from}`].pop() || "Erroneous Crate")
-      }
-      stacks[`stack${to}`].push(...tempStack.reverse())
-    }
-    this.printSolutionKey(stacks)
   }
 }
