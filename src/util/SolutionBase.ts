@@ -1,5 +1,4 @@
 import fs from "fs/promises"
-import colors from "colors/safe.js"
 
 export class SolutionBase {
   public solutionDirectory: string
@@ -15,7 +14,7 @@ export class SolutionBase {
   }
 
   async readInputLines(fileName = "input.txt") {
-    const input = await this.readInput()
+    const input = await this.readInput(fileName)
     return input.trim().split("\n")
   }
 
