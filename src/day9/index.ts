@@ -13,18 +13,7 @@ export class Solution extends SolutionBase {
   async solve() {
     this.outputPart1(await this.part1())
     this.outputPart2(await this.part2())
-  }
-
-  toPos(x: number, y: number) {
-    return { x, y }
-  }
-
-  getDistance(a: Position, b: Position) {
-    return this.toPos(a.x - b.x, a.y - b.y) as Distance
-  }
-
-  positionToString(position: Position) {
-    return [position.x, position.y].join(",")
+    rl.close()
   }
 
   async part1(fileName?: string): Promise<number> {
@@ -38,7 +27,7 @@ export class Solution extends SolutionBase {
       const axis = direction === "L" || direction === "R" ? "x" : "y"
       const forward = direction === "R" || direction === "U"
 
-      for (let i = 0; i < ~~distance; i++) {
+      for (let d = 0; d < ~~distance; d++) {
         if (forward) {
           headPosition[axis]++
         } else {
@@ -54,17 +43,17 @@ export class Solution extends SolutionBase {
 
   /**
    * Technically this is the more modular solution that could have also been used
-   * for part 1, if the knot amount is not hardcoded to 9 but a function argument. :)
-   * @param fileName
-   * @param visualize
+   * for part 1, if the knot amount would not hardcoded to 9 but a function argument instead. :)
+   * @param fileName instruction input file
+   * @param visualize if true, a visualization is rendered to the console (you'll need a big window!)
    */
   async part2(fileName?: string, visualize = false): Promise<number> {
+    const instructions = await this.readInputLines(fileName)
     const visitedTailPositions: Record<string, boolean> = {}
     const headPosition = this.toPos(0, 0)
     const knotPositions = Array(9) // if this 9 would be a variable, this could be used for part 1 as well
       .fill(null)
       .map(() => this.toPos(0, 0))
-    const instructions = await this.readInputLines(fileName)
 
     if (visualize) {
       await this.renderFrame(-15, -5, 20, 17, headPosition, knotPositions)
@@ -75,17 +64,17 @@ export class Solution extends SolutionBase {
       const axis = direction === "L" || direction === "R" ? "x" : "y"
       const forward = direction === "R" || direction === "U"
 
-      for (let i = 0; i < ~~distance; i++) {
+      for (let d = 0; d < ~~distance; d++) {
         if (forward) {
           headPosition[axis]++
         } else {
           headPosition[axis]--
         }
 
-        for (let ti = 0; ti < knotPositions.length; ti++) {
+        for (let knotIndex = 0; knotIndex < knotPositions.length; knotIndex++) {
           this.followKnot(
-            ti === 0 ? headPosition : knotPositions[ti - 1],
-            knotPositions[ti]
+            knotIndex === 0 ? headPosition : knotPositions[knotIndex - 1],
+            knotPositions[knotIndex]
           )
           if (visualize) {
             await this.renderFrame(-15, -5, 20, 17, headPosition, knotPositions)
@@ -121,6 +110,18 @@ export class Solution extends SolutionBase {
         break
       }
     }
+  }
+
+  toPos(x: number, y: number) {
+    return { x, y }
+  }
+
+  getDistance(a: Position, b: Position) {
+    return this.toPos(a.x - b.x, a.y - b.y) as Distance
+  }
+
+  positionToString(position: Position) {
+    return [position.x, position.y].join(",")
   }
 
   // >>>>
