@@ -136,7 +136,7 @@ export class Solution extends SolutionBase {
   ) {
     const viewHeight = trees[rowIndex ?? from][columnIndex ?? from]
     const isBackwards = from > to
-    let counter = 0
+    let viewableTrees = 0
     for (
       let i = from;
       isBackwards ? i >= to : i <= to;
@@ -144,11 +144,11 @@ export class Solution extends SolutionBase {
     ) {
       if (i === from) continue
       const treeHeight = trees[rowIndex ?? i][columnIndex ?? i]
-      counter++
+      viewableTrees++
       if (treeHeight >= viewHeight) {
         break
       }
     }
-    return counter
+    return viewableTrees
   }
 }
