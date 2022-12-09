@@ -31,6 +31,10 @@ export class SolutionBase {
     console.log(...callArgs)
   }
 
+  async sleep(ms = 100) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
   async solve() {
     console.warn("Implement solve() to see your output!")
   }
