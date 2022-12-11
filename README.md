@@ -6,6 +6,6 @@ Programming language used: **Typescript** with Node.js
 
 ## Running the scripts
 
-a) Simply run `yarn start:dev` and answer the prompt or…
+a) Simply run `npm run start:dev` and answer the prompt or…
 
-b) `yarn start:dev {DAY}` to run a specific day directly.
+b) `npm run start:dev {DAY}` to run a specific day directly.
