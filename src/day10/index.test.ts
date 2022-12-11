@@ -5,49 +5,53 @@ describe("Day 10", function() {
 
   describe("Register is set correctly", function() {
     it('increases cycle number for noop and nothing else', () => {
-      let pd = { cycleNumber: 1, xRegister: 1, signalStrengths: 0}
-      pd = solution.executeInstruction("noop", pd)
+      const onCycle = jest.fn()
+      let pd = { cycleNumber: 1, xRegister: 1 }
+      pd = solution.executeInstruction("noop", pd, onCycle)
       expect(pd.cycleNumber).toBe(2)
       expect(pd.xRegister).toBe(1)
-      expect(pd.signalStrengths).toBe(0)
+      expect(onCycle).toHaveBeenCalledTimes(1)
+      expect(onCycle).toHaveBeenCalledWith(expect.objectContaining({ cycleNumber: 2, xRegister: 1}))
     })
 
     it('parses addx 3 correctly', () => {
-      let pd = { cycleNumber: 2, xRegister: 1, signalStrengths: 0}
-      pd = solution.executeInstruction("addx 3", pd)
+      const onCycle = jest.fn()
+      let pd = { cycleNumber: 2, xRegister: 1 }
+      pd = solution.executeInstruction("addx 3", pd, onCycle)
       expect(pd.cycleNumber).toBe(4)
       expect(pd.xRegister).toBe(4)
-      expect(pd.signalStrengths).toBe(0)
+      expect(onCycle).toHaveBeenCalledTimes(2)
+      expect(onCycle).toHaveBeenCalledWith(expect.objectContaining({ cycleNumber: 3, xRegister: 1}))
+      expect(onCycle).toHaveBeenCalledWith(expect.objectContaining({ cycleNumber: 4, xRegister: 1}))
     })
 
     it('parses addx -5 correctly', () => {
-      let pd = { cycleNumber: 4, xRegister: 4, signalStrengths: 0}
-      pd = solution.executeInstruction("addx -5", pd)
+      const onCycle = jest.fn()
+      let pd = { cycleNumber: 4, xRegister: 4 }
+      pd = solution.executeInstruction("addx -5", pd, onCycle)
       expect(pd.cycleNumber).toBe(6)
       expect(pd.xRegister).toBe(-1)
-      expect(pd.signalStrengths).toBe(0)
-    })
-
-    it('increases signal strength correctly with noop', () => {
-      let pd = { cycleNumber: 19, xRegister: 5, signalStrengths: 0}
-      pd = solution.executeInstruction("noop", pd)
-      expect(pd.cycleNumber).toBe(20)
-      expect(pd.xRegister).toBe(5)
-      expect(pd.signalStrengths).toBe(100)
-    })
-
-    it('increases signal strength correctly with addx', () => {
-      let pd = { cycleNumber: 19, xRegister: 5, signalStrengths: 0}
-      pd = solution.executeInstruction("addx 8", pd)
-      expect(pd.cycleNumber).toBe(21)
-      expect(pd.xRegister).toBe(13)
-      expect(pd.signalStrengths).toBe(100)
+      expect(onCycle).toHaveBeenCalledTimes(2)
+      expect(onCycle).toHaveBeenCalledWith(expect.objectContaining({ cycleNumber: 5, xRegister: 4}))
+      expect(onCycle).toHaveBeenCalledWith(expect.objectContaining({ cycleNumber: 6, xRegister: 4}))
     })
   });
 
   describe("part 1", function() {
     it('solves test riddle correctly', async () => {
       await expect(solution.part1("test_input.txt")).resolves.toBe(13140)
+    })
+  });
+
+  describe("part 2", function() {
+    it('solves the test riddle correctly', async () => {
+      const expectedResult = "##..##..##..##..##..##..##..##..##..##..\n" +
+        "###...###...###...###...###...###...###.\n" +
+        "####....####....####....####....####....\n" +
+        "#####.....#####.....#####.....#####.....\n" +
+        "######......######......######......####\n" +
+        "#######.......#######.......#######....."
+      await expect(solution.part2("test_input.txt")).resolves.toBe(expectedResult)
     })
   });
 });

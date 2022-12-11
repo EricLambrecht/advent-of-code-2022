@@ -1,6 +1,4 @@
 import { SolutionBase } from "../util/SolutionBase.js"
-import prompts from "prompts";
-import number = prompts.prompts.number;
 
 const CYCLE_LENGTHS: Record<string, number> = {
   addx: 2,
@@ -10,47 +8,79 @@ const CYCLE_LENGTHS: Record<string, number> = {
 type ProgramData = {
   cycleNumber: number
   xRegister: number
-  signalStrengths: number
 }
 
 export class Solution extends SolutionBase {
   async solve() {
-    const signalStrengths = await this.part1("test_input.txt")
+    const signalStrengths = await this.part1()
     this.outputPart1(signalStrengths)
+
+    const screen = await this.part2()
+    this.outputPart2(screen)
   }
 
   async part1(fileName?: string) {
     const instructions = await this.readInputLines(fileName)
 
-    let programData = { cycleNumber: 1, xRegister: 1, signalStrengths: 0 }
+    let signalStrengths = 0
+    let programData = { cycleNumber: 0, xRegister: 1 }
 
     for (let instruction of instructions) {
-      programData = this.executeInstruction(instruction, programData)
+      programData = this.executeInstruction(instruction, programData, ({ cycleNumber, xRegister }) => {
+        if ((cycleNumber + 20) % 40 === 0) {
+          signalStrengths += this.calculateSignalStrength(cycleNumber, xRegister)
+        }
+      })
     }
 
-    return programData.signalStrengths
+    return signalStrengths
   }
 
-  executeInstruction(instruction: string, programData: ProgramData): ProgramData {
-    let { cycleNumber, xRegister, signalStrengths } = programData
+  async part2(fileName?: string) {
+    const instructions = await this.readInputLines(fileName)
+
+
+    let crtPosition = 0
+    let screen = ""
+    let programData = { cycleNumber: 0, xRegister: 1 }
+
+    for (let instruction of instructions) {
+      programData = this.executeInstruction(instruction, programData, ({ xRegister }) => {
+        if (crtPosition === 0) {
+          screen += "\n"
+        }
+
+        let spritePosition = this.getSpritePosition(xRegister)
+        const isLit = spritePosition.includes(crtPosition)
+        screen += isLit ? '#' : '.'
+        crtPosition++
+        crtPosition %= 40
+      })
+    }
+
+    return screen
+  }
+
+  getSpritePosition(xRegister: number) {
+    const SPRITE_LENGTH = 3
+    return Array(SPRITE_LENGTH).fill(null).map((_,i) => xRegister - i + 1)
+  }
+
+  executeInstruction(instruction: string, programData: ProgramData, onCycle: (programData: ProgramData) => void): ProgramData {
+    let { cycleNumber, xRegister } = programData
     const [name,value] = instruction.split( ' ')
     const cycleLength = CYCLE_LENGTHS[name]
-    console.log(name, cycleLength)
     for (let i = cycleLength; i > 0; i--) {
       cycleNumber++
-      if ((cycleNumber + 20) % 40 === 0) {
-        console.log(cycleNumber, xRegister, signalStrengths)
-        signalStrengths += this.calculateSignalStrength(cycleNumber, xRegister)
-      }
+      onCycle({ cycleNumber, xRegister })
       if (i == 1 && value) {
         xRegister += ~~value
       }
     }
-    return { cycleNumber, xRegister, signalStrengths}
+    return { cycleNumber, xRegister }
   }
 
   calculateSignalStrength(cycleNumber: number, xRegisterValue: number) {
-    console.log('calculating strength for cycle no.', cycleNumber)
     return cycleNumber * xRegisterValue
   }
 }
