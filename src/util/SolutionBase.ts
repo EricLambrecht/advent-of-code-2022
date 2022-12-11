@@ -15,7 +15,7 @@ export class SolutionBase {
 
   async readInputLines(fileName = "input.txt") {
     const input = await this.readInput(fileName)
-    return input.trim().split("\n")
+    return input.trim().split(/\r?\n/)
   }
 
   outputPart1(solution: any) {
