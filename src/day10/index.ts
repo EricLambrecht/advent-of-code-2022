@@ -2,7 +2,7 @@ import { SolutionBase } from "../util/SolutionBase.js"
 
 const CYCLE_LENGTHS: Record<string, number> = {
   addx: 2,
-  noop: 1
+  noop: 1,
 }
 
 type ProgramData = {
@@ -26,11 +26,18 @@ export class Solution extends SolutionBase {
     let programData = { cycleNumber: 0, xRegister: 1 }
 
     for (let instruction of instructions) {
-      programData = this.executeInstruction(instruction, programData, ({ cycleNumber, xRegister }) => {
-        if ((cycleNumber + 20) % 40 === 0) {
-          signalStrengths += this.calculateSignalStrength(cycleNumber, xRegister)
+      programData = this.executeInstruction(
+        instruction,
+        programData,
+        ({ cycleNumber, xRegister }) => {
+          if ((cycleNumber + 20) % 40 === 0) {
+            signalStrengths += this.calculateSignalStrength(
+              cycleNumber,
+              xRegister
+            )
+          }
         }
-      })
+      )
     }
 
     return signalStrengths
@@ -39,23 +46,27 @@ export class Solution extends SolutionBase {
   async part2(fileName?: string) {
     const instructions = await this.readInputLines(fileName)
 
-
+    const SCREEN_WIDTH = 40
     let crtPosition = 0
     let screen = ""
     let programData = { cycleNumber: 0, xRegister: 1 }
 
     for (let instruction of instructions) {
-      programData = this.executeInstruction(instruction, programData, ({ xRegister }) => {
-        if (crtPosition === 0) {
-          screen += "\n"
-        }
+      programData = this.executeInstruction(
+        instruction,
+        programData,
+        ({ xRegister }) => {
+          if (crtPosition === 0) {
+            screen += "\n"
+          }
 
-        let spritePosition = this.getSpritePosition(xRegister)
-        const isLit = spritePosition.includes(crtPosition)
-        screen += isLit ? '#' : '.'
-        crtPosition++
-        crtPosition %= 40
-      })
+          let spritePosition = this.getSpritePosition(xRegister)
+          const isLit = spritePosition.includes(crtPosition)
+          screen += isLit ? "#" : "."
+          crtPosition++
+          crtPosition %= SCREEN_WIDTH
+        }
+      )
     }
 
     return screen
@@ -63,13 +74,20 @@ export class Solution extends SolutionBase {
 
   getSpritePosition(xRegister: number) {
     const SPRITE_LENGTH = 3
-    return Array(SPRITE_LENGTH).fill(null).map((_,i) => xRegister - i + 1)
+    return Array(SPRITE_LENGTH)
+      .fill(null)
+      .map((_, i) => xRegister - i + 1)
   }
 
-  executeInstruction(instruction: string, programData: ProgramData, onCycle: (programData: ProgramData) => void): ProgramData {
+  executeInstruction(
+    instruction: string,
+    programData: ProgramData,
+    onCycle: (programData: ProgramData) => void
+  ): ProgramData {
     let { cycleNumber, xRegister } = programData
-    const [name,value] = instruction.split( ' ')
+    const [name, value] = instruction.split(" ")
     const cycleLength = CYCLE_LENGTHS[name]
+
     for (let i = cycleLength; i > 0; i--) {
       cycleNumber++
       onCycle({ cycleNumber, xRegister })
@@ -77,6 +95,7 @@ export class Solution extends SolutionBase {
         xRegister += ~~value
       }
     }
+
     return { cycleNumber, xRegister }
   }
 
